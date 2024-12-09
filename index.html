@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Tienda de Artículos Deportivos - Productos Registrados</title>
+    <style>
+        body { background-color: #28a745; }
+        .product-box { background-color: #ffffff; border: 1px solid #007bff; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center">Artículos Deportivos Registrados</h1>
+    <div id="productList"></div>
+    <div class="text-center mt-4">
+        <a href="p2.html" class="btn btn-primary">Registrar Nuevo Artículo</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadProducts);
+
+    function loadProducts() {
+        const productList = document.getElementById('productList');
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+        productList.innerHTML = '';
+        
+        if (products.length === 0) {
+            productList.innerHTML = '<p>No hay productos registrados en la tienda.</p>';
+        } else {
+            products.forEach((product, index) => {
+                if (product.name && product.type && product.size && product.price) {
+                    const div = document.createElement('div');
+                    div.classList.add('product-box');
+                    div.innerText = `${index + 1}. Producto: ${product.name} - Tipo: ${product.type}, Tamaño: ${product.size}, Precio: ${product.price}€`;
+                    productList.appendChild(div);
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

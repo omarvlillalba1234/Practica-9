@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Gestionar Productos Deportivos</title>
+    <style>
+        body { background-color: #4e73df; }
+        .product-box { background-color: #eb1313; border: 1px solid #ccc; padding: 10px; margin: 10px 0; cursor: pointer; }
+        .form-container { display: none; background-color: #fff; border: 1px solid #ccc; padding: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center">Editar Producto Deportivo</h1>
+    <div id="productList"></div>
+    <div class="text-center mt-4">
+        <a href="index.html" class="btn btn-primary">Registrar Nuevo Producto</a>
+    </div>
+
+    <div class="form-container" id="editFormContainer">
+        <h2>Editar Producto Deportivo</h2>
+        <form id="editProductForm">
+            <input type="hidden" id="editIndex">
+            <div class="form-group">
+                <label for="editName">Nombre del Producto</label>
+                <input type="text" class="form-control" id="editName" required>
+            </div>
+            <div class="form-group">
+                <label for="editType">Tipo de Producto</label>
+                <input type="text" class="form-control" id="editType" required>
+            </div>
+            <div class="form-group">
+                <label for="editSize">Tamaño</label>
+                <input type="text" class="form-control" id="editSize" required>
+            </div>
+            <div class="form-group">
+                <label for="editPrice">Precio (€)</label>
+                <input type="number" class="form-control" id="editPrice" required step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="editStock">Cantidad en Stock</label>
+                <input type="number" class="form-control" id="editStock" required>
+            </div>
+            <button type="submit" class="btn btn-success">Actualizar</button>
+            <button type="button" class="btn btn-danger" id="deleteProductButton">Eliminar</button>
+            <button type="button" class="btn btn-secondary" id="cancelEditButton">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadProducts);
+    document.getElementById('editProductForm').addEventListener('submit', updateProduct);
+    document.getElementById('cancelEditButton').addEventListener('click', () => {
+        document.getElementById('editFormContainer').style.display = 'none';
+    });
+    document.getElementById('deleteProductButton').addEventListener('click', deleteProduct);
+
+    function loadProducts() {
+        const productList = document.getElementById('productList');
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+        productList.innerHTML = '';
+
+        if (products.length === 0) {
+            productList.innerHTML = '<p>No hay productos registrados.</p>';
+        } else {
+            products.forEach((product, index) => {
+                const div = document.createElement('div');
+                div.classList.add('product-box');
+                div.innerText = `${index + 1}. ${product.name} - Tipo: ${product.type}, Tamaño: ${product.size}, Precio: ${product.price}€, Stock: ${product.stock}`;
+                div.onclick = () => editProduct(index);
+                productList.appendChild(div);
+            });
+        }
+    }
+
+    function editProduct(index) {
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+        const product = products[index];
+
+        document.getElementById('editIndex').value = index;
+        document.getElementById('editName').value = product.name;
+        document.getElementById('editType').value = product.type;
+        document.getElementById('editSize').value = product.size;
+        document.getElementById('editPrice').value = product.price;
+        document.getElementById('editStock').value = product.stock;
+
+        document.getElementById('editFormContainer').style.display = 'block';
+    }
+
+    function updateProduct(event) {
+        event.preventDefault();
+        const index = document.getElementById('editIndex').value;
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+
+        const updatedProduct = {
+            name: document.getElementById('editName').value,
+            type: document.getElementById('editType').value,
+            size: document.getElementById('editSize').value,
+            price: document.getElementById('editPrice').value,
+            stock: document.getElementById('editStock').value
+        };
+
+        products[index] = updatedProduct;
+        localStorage.setItem('sportsProducts', JSON.stringify(products));
+
+        alert('Producto actualizado con éxito!');
+        loadProducts();
+        document.getElementById('editFormContainer').style.display = 'none';
+    }
+
+    function deleteProduct() {
+        const index = document.getElementById('editIndex').value;
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+
+        products.splice(index, 1);
+        localStorage.setItem('sportsProducts', JSON.stringify(products));
+
+        alert('Producto eliminado con éxito!');
+        loadProducts();
+        document.getElementById('editFormContainer').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

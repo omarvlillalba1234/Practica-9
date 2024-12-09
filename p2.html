@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Registrar Nuevo Artículo Deportivo</title>
+    <style>
+        body { background-color: #4e73df; }
+        .form-container { background-color: #fff; border: 1px solid #ccc; padding: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center">Registrar Nuevo Artículo Deportivo</h1>
+    <div class="form-container">
+        <form id="sportsForm">
+            <div class="form-group">
+                <label for="name">Nombre del Producto</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="type">Tipo de Artículo</label>
+                <input type="text" class="form-control" id="type" required>
+            </div>
+            <div class="form-group">
+                <label for="size">Tamaño</label>
+                <input type="text" class="form-control" id="size" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Precio (€)</label>
+                <input type="number" class="form-control" id="price" required step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="stock">Cantidad en Stock</label>
+                <input type="number" class="form-control" id="stock" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <a href="index.html" class="btn btn-secondary mt-3">Regresar</a>
+            <a href="p3.html" class="btn btn-info mt-3">Editar</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('sportsForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const products = JSON.parse(localStorage.getItem('sportsProducts')) || [];
+
+        const newProduct = {
+            name: document.getElementById('name').value,
+            type: document.getElementById('type').value,
+            size: document.getElementById('size').value,
+            price: document.getElementById('price').value,
+            stock: document.getElementById('stock').value
+        };
+
+        products.push(newProduct);
+
+        localStorage.setItem('sportsProducts', JSON.stringify(products));
+
+        alert('Producto registrado con éxito!');
+
+        document.getElementById('sportsForm').reset();
+    });
+</script>
+
+</body>
+</html>
